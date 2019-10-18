@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { useAuth0 } from 'auth'
 import { toggleSettingsModal, updateCodeMirrorOption } from 'slices/settings'
 import { togglePreviewMarkdown } from 'slices/previewMarkdown'
 import { toggleDarkTheme } from 'slices/theme'
@@ -8,6 +9,7 @@ import { ReactMouseEvent, RootState } from 'types'
 import Switch from 'components/Switch'
 
 const SettingsModal: React.FC = () => {
+  const { user, logout } = useAuth0()
   const { codeMirrorOptions, isOpen } = useSelector((state: RootState) => state.settingsState)
   const { previewMarkdown } = useSelector((state: RootState) => state.previewMarkdown)
   const { dark } = useSelector((state: RootState) => state.themeState)
@@ -56,6 +58,17 @@ const SettingsModal: React.FC = () => {
     <div className="dimmer">
       <div ref={node} className="settings-modal">
         <h2>Settings</h2>
+
+        <div className="settings-options">
+          <img src={user.picture} height="50" width="50" /> Authenticated with GitHub
+          <button
+            onClick={() => {
+              logout()
+            }}
+          >
+            Log out
+          </button>
+        </div>
 
         <div className="settings-options">
           <div>Active line highlight</div>
